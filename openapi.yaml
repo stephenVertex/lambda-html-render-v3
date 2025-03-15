@@ -51,7 +51,7 @@ components:
       properties:
         html:
           type: string
-          description: Base64 encoded HTML content to convert
+          description: Base64 encoded HTML content to convert. There must be a div with id="target-container" in the HTML.
         outputType:
           type: string
           enum: [base64, s3]
@@ -62,6 +62,9 @@ components:
           enum: [png, jpeg]
           default: png
           description: Image format
+        targetSelector:
+          type: string
+          description: CSS selector for the element to capture (e.g. "#target-container")
         imageQuality:
           type: integer
           minimum: 1
