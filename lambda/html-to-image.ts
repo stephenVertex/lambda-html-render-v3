@@ -122,6 +122,20 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       if (!element) {
         throw new Error(`Element with selector "${targetSelector}" not found`);
       }
+
+      // Get the element's dimensions
+      const boundingBox = await element.boundingBox();
+      if (!boundingBox) {
+        throw new Error('Could not get element dimensions');
+      }
+
+      // Set viewport to match element size with some padding
+      await page.setViewport({
+        width: Math.ceil(boundingBox.width),
+        height: Math.ceil(boundingBox.height),
+        deviceScaleFactor: 2  // This will render at 2x resolution
+      });
+
       screenshot = await element.screenshot(screenshotOptions) as Buffer;
     } else {
       // Otherwise take full page screenshot
