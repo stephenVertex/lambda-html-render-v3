@@ -1,0 +1,21 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+For any test cases in input/*.json, 
+make sure that they have fields test_id and test_description.
+These are used by the client to describe and identify tests.
+
+# Input JSON Rules
+
+1. All test files must be in JSON format
+2. Each test file must have a `.json` extension
+3. Test files must be placed in the `input/` directory
+4. Test IDs must be unique 4-character hex strings (e.g., af31, bf42)
+5. Test descriptions must be clear and concise
+6. HTML content must be base64 encoded
+7. Output types supported: "base64" or "s3"
+8. Image formats supported: "png", "jpeg", "webp"
+9. Viewport dimensions must be positive integers
+10. File names should follow pattern: `test-{purpose}-{output}.json`
