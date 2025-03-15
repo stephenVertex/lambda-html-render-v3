@@ -42,6 +42,8 @@ def create_input_file(html_path, base64_content):
         "outputType": "s3",
         "imageFormat": "png",
         "targetSelector": "#target-container",
+        "viewportWidth": 2560,  # 2K width
+        "viewportHeight": 1440,  # 2K height
         "source_hash": html_hash  # Store the hash for reference
     }
     
