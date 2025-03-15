@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: HTML to Image Conversion API
+  description: API for converting HTML content to images using Puppeteer and AWS Lambda
+  version: 1.0.0
+
+servers:
+  - url: https://ctponhc1bc.execute-api.us-east-1.amazonaws.com/prod
+    description: Production API Gateway endpoint
+
+paths:
+  /render-image:
+    post:
+      summary: Convert HTML to image
+      description: Converts HTML content to an image using Puppeteer in AWS Lambda
+      operationId: convertHtmlToImage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HtmlToImageRequest'
+      responses:
+        '200':
+          description: Successful conversion
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Base64Response'
+                  - $ref: '#/components/schemas/S3Response'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    HtmlToImageRequest:
+      type: object
+      required:
+        - html
+      properties:
+        html:
+          type: string
+          description: Base64 encoded HTML content to convert
+        outputType:
+          type: string
+          enum: [base64, s3]
+          default: base64
+          description: Output format type
+        imageFormat:
+          type: string
+          enum: [png, jpeg]
+          default: png
+          description: Image format
+        imageQuality:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 80
+          description: JPEG image quality (only applicable for jpeg format)
+        viewportWidth:
+          type: integer
+          default: 1280
+          description: Viewport width in pixels
+        viewportHeight:
+          type: integer
+          default: 800
+          description: Viewport height in pixels
+        fullPage:
+          type: boolean
+          default: false
+          description: Whether to capture the full scrollable page
+
+    Base64Response:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Screenshot generated successfully
+        imageFormat:
+          type: string
+          enum: [png, jpeg]
+        image:
+          type: string
+          description: Base64 encoded image data
+
+    S3Response:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Screenshot saved to S3
+        url:
+          type: string
+          description: Signed S3 URL for the generated image
+        key:
+          type: string
+          description: S3 object key for the generated image
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message 

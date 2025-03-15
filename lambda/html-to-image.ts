@@ -78,7 +78,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     } else {
       // If running in AWS, download and use a compatible version of chromium at runtime
       browser = await puppeteer.launch({
-        args: chromium.args,
+        args: [...chromium.args, '--ignore-certificate-errors'],
         defaultViewport: {
           width: viewportWidth,
           height: viewportHeight
@@ -86,8 +86,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         executablePath: await chromium.executablePath(
           'https://github.com/Sparticuz/chromium/releases/download/v133.0.0/chromium-v133.0.0-pack.tar'
         ),
-        headless: true, // Use boolean value instead of chromium.headless
-        ignoreHTTPSErrors: true,
+        headless: true,
       });
     }
 
