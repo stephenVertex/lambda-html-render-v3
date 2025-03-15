@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import chromium from '@sparticuz/chromium-min';
 import puppeteer from 'puppeteer-core';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { randomUUID } from 'crypto';
 
@@ -132,10 +132,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         ContentType: imageFormat === 'png' ? 'image/png' : 'image/jpeg'
       }));
       
-      // Generate signed URL
+      // Generate signed URL for GET operation
       const signedUrl = await getSignedUrl(
         s3Client, 
-        new PutObjectCommand({
+        new GetObjectCommand({
           Bucket: BUCKET_NAME,
           Key: fileKey
         }), 
