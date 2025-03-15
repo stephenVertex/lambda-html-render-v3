@@ -43,6 +43,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     const viewportWidth = requestBody.viewportWidth || 1280;
     const viewportHeight = requestBody.viewportHeight || 800;
     const fullPage = requestBody.fullPage || false;
+    const targetSelector = requestBody.targetSelector;
     
     if (!htmlContent) {
       return {
@@ -113,8 +114,19 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     if (imageFormat === 'jpeg') {
       screenshotOptions.quality = imageQuality;
     }
-    
-    const screenshot = await page.screenshot(screenshotOptions) as Buffer;
+
+    let screenshot: Buffer;
+    if (targetSelector) {
+      // If targetSelector is provided, get the specific element
+      const element = await page.$(targetSelector);
+      if (!element) {
+        throw new Error(`Element with selector "${targetSelector}" not found`);
+      }
+      screenshot = await element.screenshot(screenshotOptions) as Buffer;
+    } else {
+      // Otherwise take full page screenshot
+      screenshot = await page.screenshot(screenshotOptions) as Buffer;
+    }
     
     // Close browser
     await browser.close();
