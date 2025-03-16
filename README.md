@@ -95,3 +95,12 @@ npx cdk synth
 - The S3 bucket is configured to automatically delete objects after 7 days
 - The Lambda function has a 30-second timeout and 2GB of memory
 - For production use, consider adjusting the S3 bucket's removal policy and lifecycle rules
+
+
+# MCP Server
+
+This includes an MCP server, which we can run as:
+
+```
+.venv/bin/mcp run server.py
+```
